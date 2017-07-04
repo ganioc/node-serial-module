@@ -125,11 +125,11 @@ Serial.prototype.createContent = function(type, content){
     i++;
 
     if(i > 0xffff){
-	i = 0;
+	    i = 0;
     }
     
     buf.write(type, 0, LENGTH_TYPE);
-    buf.writeUInt16BE(i, LENGTH_ID);
+    buf.writeUInt16BE(i, LENGTH_TYPE);
     buf.write(content, LENGTH_ID + LENGTH_TYPE, content.length);
     return buf;    
     
@@ -205,6 +205,8 @@ Serial.prototype.parse_type = function( frame){
 };
 
 Serial.prototype.sendPing = function(){
+    console.log('');
+
     this.sendType( TYPE_PING, 'hello' );
 };
 
