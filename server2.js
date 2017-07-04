@@ -40,8 +40,8 @@ var UART_BAUDRATE = 9600;
     port.on('frame_ping', function(objFrame){
 	console.log('Rcved frame_ping');
 	console.log(objFrame);
-	console.log(objFrame.id);
-	console.log(objFrame.content);
+	// console.log(objFrame.id);
+	// console.log(objFrame.content);
 
 	port.sendPingFB(objFrame.id, objFrame.content);
     });

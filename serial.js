@@ -156,7 +156,8 @@ Serial.prototype.sendFrame = function( str){
     var buf = new Buffer(str.length + 2);
     var inBuf = new Buffer(str);
 
-    console.log('Sent:' + str);
+    console.log('Sent:' + '[' + str.length + ']');
+    console.log(inBuf);
     
     buf[0] = SYMBOL_START;
     
@@ -176,21 +177,26 @@ Serial.prototype.sendFrame = function( str){
 };
 
 Serial.prototype.parse_type = function( frame){
+    //console.log('in parse_type()');
+    
     if(frame.length < LENGTH_TYPE + LENGTH_ID){
 	return console.log('Too short type');
     }
+    var tempBuf = new Buffer(frame);
+    
+    var type = tempBuf.slice(0, LENGTH_TYPE).toString();
+    //console.log(type);
+    var newId = frame.readUInt16BE(3);
+    //console.log('newId is:' + newId);
 
-    var type = new Buffer(frame).slice(0, LENGTH_TYPE).toString();
-    var id = new Buffer(frame).slice(LENGTH_TYPE,LENGTH_ID);
-    var content = new Buffer(frame).slice(LENGTH_ID + LENGTH_TYPE, frame.length - LENGTH_ID - LENGTH_TYPE);
-
-    console.log('type is:' + type);
-    console.log('id is:' + id);
-    console.log('content is:' + content);
+    var tempBuf2 = new Buffer(frame);
+    //console.log(tempBuf2);
+    var newContent = tempBuf2.slice(LENGTH_ID + LENGTH_TYPE, frame.length).toString();
+    //console.log(newContent);
 
     var obj = {};
-    obj.id = id.toString();
-    obj.content = content.toString();
+    obj.id = newId;
+    obj.content = newContent;
     
     switch(type){
 
