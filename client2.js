@@ -42,7 +42,7 @@ var UART_BAUDRATE = 9600;
     });
 
     port.on('frame_feedback', function(objFrame){
-	console.log('Rcved frame_feedback');
+	console.log('==> Rcved frame_feedback');
 	console.log(objFrame);
     });
     
