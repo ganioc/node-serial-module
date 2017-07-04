@@ -72,9 +72,9 @@ function Serial(portPath, baudRate){
 
     this._port.on('frame', function(frame){
 	console.log('\n' + new Date());
-	console.log('Received frame:');
-	console.log(frame.length + ':' + frame.toString());
-
+	console.log('Received frame:[' + frame.length + ']');
+	console.log(frame);
+	
 	that.parse_type(frame);
 	
     });
@@ -120,19 +120,32 @@ Serial.prototype.getFrame = function(){
 };
 
 Serial.prototype.createContent = function(type, content){
-    var buf = new Buffer(LENGTH_TYPE + LENGTH_ID + content.length);
-    
     i++;
 
     if(i > 0xffff){
 	    i = 0;
     }
     
-    buf.write(type, 0, LENGTH_TYPE);
-    buf.writeUInt16BE(i, LENGTH_TYPE);
-    buf.write(content, LENGTH_ID + LENGTH_TYPE, content.length);
-    return buf;    
+    return this.createContentBasic(type, i, content);    
     
+};
+
+Serial.prototype.createContentBasic = function(type,id, content){
+    var buf = new Buffer(LENGTH_TYPE + LENGTH_ID + content.length);
+
+    if(Buffer.isBuffer(id)){
+	console.log('id length is:' + id.length);
+	id = id.readUInt16BE(0);
+    }
+
+    if(Buffer.isBuffer(content)){
+	content = content.toString();
+    }
+    
+    buf.write(type, 0, LENGTH_TYPE);
+    buf.writeUInt16BE(id, LENGTH_TYPE);
+    buf.write(content, LENGTH_ID + LENGTH_TYPE, content.length);
+    return buf;        
 };
 
 Serial.prototype.sendType = function(type, content){
@@ -172,29 +185,27 @@ Serial.prototype.parse_type = function( frame){
     var content = new Buffer(frame).slice(LENGTH_ID + LENGTH_TYPE, frame.length - LENGTH_ID - LENGTH_TYPE);
 
     console.log('type is:' + type);
+    console.log('id is:' + id);
+    console.log('content is:' + content);
+
+    var obj = {};
+    obj.id = id.toString();
+    obj.content = content.toString();
     
     switch(type){
+
     case TYPE_PING:
 	//sendFeedback(port, TYPE_FEEDBACK ,id, content);
 	this.emit('frame_ping',
-		  {
-		      id:id,
-		      content:content
-		  });
+		 obj);
 	break;
     case TYPE_CUST:
 	this.emit('frame_cust',
-		  {
-		      id:id,
-		      content:content
-		  });
+		 obj);
 	break;
     case TYPE_FEEDBACK:
 	this.emit('frame_feedback',
-		  {
-		      id:id,
-		      content:content
-		  });
+		 obj);
     default:
 	console.log('Unrecognized type');
 	break;
@@ -208,6 +219,17 @@ Serial.prototype.sendPing = function(){
     console.log('');
 
     this.sendType( TYPE_PING, 'hello' );
+};
+
+Serial.prototype.sendPingFB = function( id, content){
+    console.log('');
+
+    this.sendFeedback( TYPE_FEEDBACK, id , content);
+};
+
+Serial.prototype.sendFeedback = function(type, id, content){
+
+    this.sendFrame(this.createContentBasic(type, id, content));
 };
 
 module.exports = Serial;

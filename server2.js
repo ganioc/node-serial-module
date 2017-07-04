@@ -25,25 +25,6 @@ var UART_BAUDRATE = 9600;
     );
 
 
-    // function sendFeedback(pt,  type, id, content){
-    // 	var buf = new Buffer(LENGTH_TYPE + LENGTH_ID + content.length);
-    // 	if(!Buffer.isBuffer(type)){
-    // 	    type = new Buffer(type);
-    // 	}
-    // 	if(!Buffer.isBuffer(id)){
-    // 	    id = new Buffer(id);
-    // 	}
-    // 	if(!Buffer.isBuffer(content)){
-    // 	    content = new Buffer(content);
-    // 	}
-
-    // 	type.copy(buf, 0, 0, LENGTH_TYPE);
-    // 	id.copy(buf, LENGTH_TYPE, 0, LENGTH_ID);
-    // 	content.copy(buf, LENGTH_TYPE + LENGTH_ID,
-    // 		     0, content.length);
-    // 	sendFrame(pt, buf);
-    // }
-
     port.on('open', function(){
 	console.log( 'Port opened');
     });
@@ -59,6 +40,10 @@ var UART_BAUDRATE = 9600;
     port.on('frame_ping', function(objFrame){
 	console.log('Rcved frame_ping');
 	console.log(objFrame);
+	console.log(objFrame.id);
+	console.log(objFrame.content);
+
+	port.sendPingFB(objFrame.id, objFrame.content);
     });
     
 })('hello');
