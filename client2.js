@@ -28,6 +28,7 @@ var UART_BAUDRATE = 9600;
 	console.log( 'Port opened');
 	
 	setInterval(function(){
+	    console.log('<==');
 	    port.sendPing();
 	},2000);
     });

@@ -211,7 +211,8 @@ Serial.prototype.parse_type = function( frame){
 	break;
     case TYPE_FEEDBACK:
 	this.emit('frame_feedback',
-		 obj);
+		  obj);
+	break;
     default:
 	console.log('Unrecognized type');
 	break;
