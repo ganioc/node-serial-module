@@ -30,6 +30,13 @@ var state = STATE_IDLE;
 	}
     );
 
+    var i = 0;
+
+    function getContent(){
+	i++;
+	return 'LoRa:' + i;
+    }
+
     function getFrame(){
 	//console.log('indexBuffer:' + indexBuffer);
 	port.emit('frame', new Buffer.from(buffer).slice(0, indexBuffer));
@@ -76,6 +83,8 @@ var state = STATE_IDLE;
     function sendFrame(pt, str){
 	var buf = new Buffer(str.length + 2);
 	var inBuf = new Buffer(str);
+
+	console.log('Sent:' + str);
 	
 	buf[0] = 0x01;
 	
@@ -98,9 +107,10 @@ var state = STATE_IDLE;
     port.on('open', function(){
 	console.log( 'Port opened');
 
+	
+	
 	setInterval(function(){
-	    sendFrame(port, 'abcdefghij');
-	    
+	    sendFrame(port, getContent());
 	}, 1500);
 	
     });
