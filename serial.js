@@ -223,13 +223,10 @@ Serial.prototype.parse_type = function( frame){
 };
 
 Serial.prototype.sendPing = function(){
-    console.log('');
-
     this.sendType( TYPE_PING, 'hello' );
 };
 
 Serial.prototype.sendPingFB = function( id, content){
-    console.log('');
 
     this.sendFeedback( TYPE_FEEDBACK, id , content);
 };
