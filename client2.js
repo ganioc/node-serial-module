@@ -10,7 +10,7 @@
 var _ = require('underscore');
 var Serial = require('./serial.js');
 
-var UART_PORT = '/dev/tty.usbserial';
+var UART_PORT = '\\\\.\\COM70';
 var UART_BAUDRATE = 9600;
 
 (function(arg){
