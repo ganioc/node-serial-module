@@ -75,7 +75,7 @@ function Serial(portPath, baudRate){
 	console.log('Received frame:');
 	console.log(frame.length + ':' + frame.toString());
 
-	this.parse_type(frame);
+	that.parse_type(frame);
 	
     });
 }
@@ -170,6 +170,8 @@ Serial.prototype.parse_type = function( frame){
     var type = new Buffer(frame).slice(0, LENGTH_TYPE).toString();
     var id = new Buffer(frame).slice(LENGTH_TYPE,LENGTH_ID);
     var content = new Buffer(frame).slice(LENGTH_ID + LENGTH_TYPE, frame.length - LENGTH_ID - LENGTH_TYPE);
+
+    console.log('type is:' + type);
     
     switch(type){
     case TYPE_PING:
