@@ -222,8 +222,25 @@ Serial.prototype.parse_type = function( frame){
 
 };
 
+Serial.prototype.getPingInfo = (function(){
+    var i = 0;
+    var messages = [
+        'This is A',
+        'Is that a B',
+        'A moment is C',
+        'New world is D',
+        'World! won\'t be E'
+    ];
+    return function(){
+        if(i >= messages.length){
+            i = 0;
+        }
+        return messages[i++];
+    }
+})();
+
 Serial.prototype.sendPing = function(){
-    this.sendType( TYPE_PING, 'hello' );
+    this.sendType( TYPE_PING, this.getPingInfo() );
 };
 
 Serial.prototype.sendPingFB = function( id, content){
